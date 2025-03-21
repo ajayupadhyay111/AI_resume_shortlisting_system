@@ -11,7 +11,10 @@ const candidateSchema = new mongoose.Schema({
     score:Number,
     resumeURL:String,
     location:String,
-    status:String
+    status:{
+        type:String,
+        enum:["Shortlisted","Rejected"]
+    }
 },{
     timestamps: true
 })

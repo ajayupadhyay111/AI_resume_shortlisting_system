@@ -7,4 +7,7 @@ router.post("/register", userController.register);
 router.post("/login", userController.login);
 router.get("/profile", authenticateRoute, userController.getProfile);
 router.post("/refresh-token", userController.refreshToken);
+router.post("/reject/:id", authenticateRoute, userController.rejectCandidate);
+router.post("/shortlist/:id", authenticateRoute, userController.shortlistCandidate);
+router.post("/logout", authenticateRoute, userController.logout);
 module.exports = router;

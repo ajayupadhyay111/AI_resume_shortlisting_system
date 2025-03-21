@@ -1,6 +1,8 @@
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const Candidate = require("../models/candidate");
+const Attempt = require("../models/attempt");
 
 const userController = {
   register: async (req, res, next) => {
@@ -83,7 +85,7 @@ const userController = {
 
     const isRefreshTokenValid = jwt.verify(refreshToken, process.env.JWT_SECRET);
     if (!isRefreshTokenValid) {
-      return res.status(400).json({ message: "Invalid refresh token" });
+      return res.status(401).json({ message: "Invalid refresh token" });
     }
 
     if (user.refreshTokenExpiryDate < Date.now()) {
@@ -118,6 +120,52 @@ const userController = {
     await user.save();
     res.clearCookie("refreshToken");
     res.json({ message: "Logout successful" });
+  },
+
+  rejectCandidate: async (req, res) => {
+    const { id } = req.params;
+    const { attemptId } = req.body;
+    const attempt = await Attempt.findById(attemptId);
+    if(!attempt){
+      return res.status(400).json({ message: "Attempt not found" });
+    }
+    if(attempt.uploaderId == req.userId){
+      if(attempt.candidateId.some(candidate => candidate._id == id)){
+        const candidate = await Candidate.findById(id);
+        candidate.status = "Rejected";
+        await candidate.save();
+        res.json({ message: "Candidate rejected" });
+      }
+      else{
+        return res.status(400).json({ message: "Candidate not found" });
+      }
+    }
+    else{
+      return res.status(400).json({ message: "You are not allowed to reject candidate" });
+    }
+  },
+
+  shortlistCandidate: async (req, res) => {
+    const { id } = req.params;
+    const { attemptId } = req.body;
+    const attempt = await Attempt.findById(attemptId);
+    if(!attempt){
+      return res.status(400).json({ message: "Attempt not found" });
+    }
+    if(attempt.uploaderId == req.userId){
+      if(attempt.candidateId.some(candidate => candidate._id == id)){
+        const candidate = await Candidate.findById(id);
+        candidate.status = "Shortlisted";
+        await candidate.save();
+        res.json({ message: "Candidate shortlisted" });
+      }
+      else{
+        return res.status(400).json({ message: "Candidate not found" });
+      }
+    }
+    else{
+      return res.status(400).json({ message: "You are not allowed to shortlist candidate" });
+    }
   },
 };
 

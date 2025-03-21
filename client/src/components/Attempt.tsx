@@ -10,6 +10,9 @@ import {
 } from "@/components/ui/select"
 import { useLocation } from "react-router-dom";
 import { getCandidatesByAttemptId } from "@/API/resumeAPI";
+import { rejectCandidate, shortlistCandidate } from "@/API/userAPI";
+import toast from "react-hot-toast";
+import { AxiosError } from "axios";
 
 
 const Attempt = () => {
@@ -21,14 +24,14 @@ const Attempt = () => {
     const location = useLocation()
     const id = location.pathname.split("/").pop();
 
+    const fetchData = async () => {
+        const response = await getCandidatesByAttemptId(id!)
+        setData(response)
+        setFilteredData(response)
+    }
     useEffect(()=>{
-        const fetchData = async () => {
-            const response = await getCandidatesByAttemptId(id!)
-            setData(response)
-            setFilteredData(response)
-        }
         fetchData()
-    },[])
+    },[setData])
     const sortByScore = () => {
         const sortedData = [...data].sort((a, b) =>
             sortOrder === "asc"
@@ -55,7 +58,16 @@ const Attempt = () => {
         }));
     }
 
-    console.log(filteredData)
+    const handleRejectCandidate = async (id:string,attemptId:string) => {
+        try {
+            const response = await rejectCandidate(id,attemptId)
+            toast.success(response.message)
+            fetchData()
+        } catch (error) {
+            console.log("error ",error)
+        }
+        
+    }
 
     return (
         <div className="p-4 overflow-x-auto">
@@ -108,7 +120,7 @@ const Attempt = () => {
                                 <td className="border border-gray-700 p-2">{candidate.location}</td>
                                 <td className={`border border-gray-700 p-2 ${candidate.status === "Shortlisted" ? "text-green-500" : "text-red-500"}`}>{candidate.status}</td>
                                 <td className="border border-gray-700 p-2 text-center">
-                                    <a href={candidate.resumes} target="_blank" rel="noopener noreferrer">
+                                    <a href={candidate.resumeURL} target="_blank" rel="noopener noreferrer">
                                         <button className="text-blue-500 underline px-2 rounded-md">
                                             View
                                         </button>
@@ -117,11 +129,11 @@ const Attempt = () => {
                                 <td className="px-4 py-2 space-x-2">
                                     {
                                         candidate.status === "Shortlisted" ? (
-                                            <button className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 transition">
+                                            <button onClick={()=>handleRejectCandidate(candidate._id,id!)} className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 transition">
                                                 Reject
                                             </button>
                                         ) : (
-                                            <button className="px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
+                                            <button onClick={()=>shortlistCandidate(candidate._id,id!)} className="px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
                                                 Shortlist
                                             </button>
                                         )

@@ -31,7 +31,7 @@ export const login = async (data: LoginData) => {
 };
 
 export const logout = async () => {
-  const response = await api.post("/auth/logout");
+  const response = await api.post("/user/logout");
   return response.data;
 };
 

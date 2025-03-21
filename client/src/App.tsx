@@ -5,6 +5,7 @@ import { getProfile } from "./API/authenticationAPIs"
 import { AppDispatch } from "./store/store"
 import { useDispatch } from "react-redux"
 import { setUser } from "./store/features/user/userSlice"
+import { AxiosError } from "axios"
 
 const Home = lazy(() => import("./pages/Home"))
 const Dashboard = lazy(() => import("./pages/Dashboard"))
@@ -22,21 +23,31 @@ const Contact = lazy(() => import("./pages/Contact"))
 const Login = lazy(() => import("./pages/Login"))
 const Register = lazy(() => import("./pages/Register"))
 const ResumeUpload = lazy(() => import("./pages/ResumeUpload"))
+import { useNavigate } from "react-router-dom"
 
 function App() {
   const dispatch = useDispatch<AppDispatch>()
+  const navigate = useNavigate()
 useEffect(()=>{
   window.scrollTo(0,0);
 
   (async()=>{
+   try {
     const response = await getProfile()
     dispatch(setUser(response.user))
+   } catch (error) {
+    const axiosError = error as AxiosError;
+  if(axiosError.response?.status === 401){
+    localStorage.removeItem("accessToken")
+    navigate("/login")
+    }
+   }
   })()
 },[])
   return (
     <>
-      <Navbar />
       <Suspense fallback={<div>Loading...</div>}>
+      <Navbar />
         <Routes>
 
           {/* public routes */}
@@ -59,8 +70,8 @@ useEffect(()=>{
           </Route>
           <Route path="/upload" element={<ResumeUpload />} />
         </Routes>
-      </Suspense>
       <Footer />
+      </Suspense>
     </>
   )
 }
