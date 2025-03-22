@@ -19,12 +19,10 @@ const processResumes = async (resumes) => {
 
 
       const match = batch_of_resumes.map((resume) => pool.run(resume));
-      // console.log("match ",match); // match contains promises with pending status
       const matches = await Promise.all(match);
       results.push(...matches);
     }
 
-    console.log("results ", results);
 
     for (let i = 0; i < results.length; i++) {
       // 🔥 Regex to extract JSON content

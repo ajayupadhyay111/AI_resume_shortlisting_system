@@ -60,7 +60,7 @@ const ResumeUpload: React.FC = () => {
       if (response.success) {
         toast.success("Match Completed Successfully!");
       }
-      navigate("/dashboard");
+      window.location.href = "/dashboard"
     } catch (error) {
       const axiosError = error as AxiosError
       console.log("error in resume upload ", axiosError);

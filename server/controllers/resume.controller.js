@@ -61,8 +61,6 @@ const resumeController = {
 
       let rejectedResumes = await Candidate.countDocuments({status:"Rejected",attemptId:attempt._id});
       let shortlistResumes = await Candidate.countDocuments({status:"Shortlisted",attemptId:attempt._id});
-      console.log("rejectedResumes ", rejectedResumes);
-      console.log("shortlistResumes ", shortlistResumes);
       await Attempt.findByIdAndUpdate(attempt._id, {
         rejectedResumes,
         shortlistResumes,

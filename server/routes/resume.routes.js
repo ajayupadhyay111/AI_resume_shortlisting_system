@@ -26,18 +26,5 @@ router.get(
   resumeController.getCandidatesByAttemptId
 );
 
-router.get(
-  "/",
-  authenticateRoute,
-  (req, res, next) => {
-    const userId = req.userId;
-     console.log("first controller " + userId);
-    next();
-  },
-  (req, res, next) => {
-    const userId = req.userId;
-    console.log("second controller " + userId);
-    res.send("second controller " + userId);
-  }
-);
+
 module.exports = router;
