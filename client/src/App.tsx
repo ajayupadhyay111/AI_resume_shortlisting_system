@@ -30,12 +30,6 @@ function App() {
   const navigate = useNavigate()
 
 
-  useEffect(()=>{
-    const response = axios.get("https://ai-resume-shortlisting-system.onrender.com/")
-    console.log(response)
-  },[])
-
-
 useEffect(()=>{
   window.scrollTo(0,0);
 

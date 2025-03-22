@@ -8,11 +8,11 @@ export const uploadResume = async (data: FormData) => {
 };
 
 export const getAttempts = async () => {
-  const response = await api.get("/resume/attempts");
+  const response = await api.get("/api/resume/attempts");
   return response.data;
 };
 
 export const getCandidatesByAttemptId = async (id:string) => {
-  const response = await api.get(`/resume/attempt/${id}`);
+  const response = await api.get(`/api/resume/attempt/${id}`);
   return response.data;
 };

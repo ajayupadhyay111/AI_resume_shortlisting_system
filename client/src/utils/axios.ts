@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://ai-resume-shortlisting-system.onrender.com/api";
+const API_URL = "https://ai-resume-shortlisting-system.onrender.com";
 
 let accessToken = localStorage.getItem("accessToken");
 const api = axios.create({
@@ -21,7 +21,7 @@ api.interceptors.response.use(
         if (error.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
             try {
-                const response  = await api.post("/user/refresh-token");
+                const response  = await api.post("/api/user/refresh-token");
                 localStorage.setItem("accessToken", response.data.accessToken);
                 api.defaults.headers.common["Authorization"] = `Bearer ${response.data.accessToken}`;
                 return api(originalRequest);
