@@ -1,7 +1,7 @@
 import api from "../utils/axios";
 
 export const uploadResume = async (data: FormData) => {
-  const response = await api.post("/resume/match", data,{
+  const response = await api.post("/api/resume/match", data,{
     headers: { 'Content-Type': 'multipart/form-data' }
   });
   return response.data;
