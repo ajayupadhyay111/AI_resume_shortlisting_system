@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Logo from "../assets/logo.svg";
 import { Button } from "./ui/button";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -14,10 +14,12 @@ import {
 } from "./ui/dropdown-menu";
 import { Home, LogOut } from "lucide-react";
 import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import { AppDispatch, RootState } from "@/store/store";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
 import { logout } from "@/API/authenticationAPIs";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "@/store/features/user/userSlice";
 
 const navItems = [
   {
@@ -238,6 +240,8 @@ function Navbar({}: Props) {
 
 const Modal = ({openDialog, setOpenDialog}:{openDialog:boolean, setOpenDialog:React.Dispatch<React.SetStateAction<boolean>>}) => {
     const [isLoading, setIsLoading] = useState(false)
+    const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
     const handleLogout = async () => {
         try {
             setIsLoading(true)
@@ -246,6 +250,10 @@ const Modal = ({openDialog, setOpenDialog}:{openDialog:boolean, setOpenDialog:Re
                 toast.success(response.message)
                 setOpenDialog(false)
                 setIsLoading(false)
+                localStorage.removeItem("accessToken")
+                navigate("/login")
+              dispatch(logoutUser())
+                return; 
             }
         } catch (error) {
             console.log(error)
@@ -261,7 +269,12 @@ const Modal = ({openDialog, setOpenDialog}:{openDialog:boolean, setOpenDialog:Re
         </DialogHeader>
         <DialogDescription className="flex justify-between items-center">
                 <Button variant="outline" onClick={() => setOpenDialog(false)}>Cancel</Button>
-                <Button className="bg-red-600 hover:bg-red-500 text-white" onClick={handleLogout}>Logout</Button>
+                <Button className="bg-red-600 hover:bg-red-500 text-white w-[72px]" onClick={handleLogout}>
+                {
+                  isLoading?
+                  <div className="border-b-2 border-white w-5 h-5 rounded-full animate-spin"></div>:"Logout"
+                }
+                </Button>
         </DialogDescription>
       </DialogContent>
     </Dialog>

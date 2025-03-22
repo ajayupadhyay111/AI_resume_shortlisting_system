@@ -12,8 +12,6 @@ import { useLocation } from "react-router-dom";
 import { getCandidatesByAttemptId } from "@/API/resumeAPI";
 import { rejectCandidate, shortlistCandidate } from "@/API/userAPI";
 import toast from "react-hot-toast";
-import { AxiosError } from "axios";
-
 
 const Attempt = () => {
     const [data, setData] = useState<any[]>([]);
@@ -67,6 +65,15 @@ const Attempt = () => {
             console.log("error ",error)
         }
         
+    }
+    const handleSubmitCandidate = async(id:string,attemptId:string)=>{
+        try {
+            const response = await shortlistCandidate(id,attemptId)
+            toast.success(response.message)
+            fetchData()
+        } catch (error) {
+            console.log("Error ",error)
+        }
     }
 
     return (
@@ -133,7 +140,7 @@ const Attempt = () => {
                                                 Reject
                                             </button>
                                         ) : (
-                                            <button onClick={()=>shortlistCandidate(candidate._id,id!)} className="px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
+                                            <button onClick={()=>handleSubmitCandidate(candidate._id,id!)} className="px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
                                                 Shortlist
                                             </button>
                                         )

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = "https://ai-resume-shortlisting-system.onrender.com";
 
 let accessToken = localStorage.getItem("accessToken");
 const api = axios.create({
