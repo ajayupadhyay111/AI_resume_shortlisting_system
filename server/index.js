@@ -14,7 +14,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://ai-resume-shortlisting-system.vercel.app",
+    origin: "https://ai-resume-shortlisting-system-gyn9f31eu.vercel.app/",
     credentials: true,
   })
 );

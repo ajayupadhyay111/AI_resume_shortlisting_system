@@ -5,7 +5,7 @@ import { getProfile } from "./API/authenticationAPIs"
 import { AppDispatch } from "./store/store"
 import { useDispatch } from "react-redux"
 import { setUser } from "./store/features/user/userSlice"
-import { AxiosError } from "axios"
+import axios, { AxiosError } from "axios"
 
 const Home = lazy(() => import("./pages/Home"))
 const Dashboard = lazy(() => import("./pages/Dashboard"))
@@ -28,6 +28,14 @@ import { useNavigate } from "react-router-dom"
 function App() {
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
+
+
+  useEffect(()=>{
+    const response = axios.get("https://ai-resume-shortlisting-system.onrender.com/")
+    console.log(response)
+  },[])
+
+
 useEffect(()=>{
   window.scrollTo(0,0);
 
