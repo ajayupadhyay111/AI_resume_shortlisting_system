@@ -20,6 +20,10 @@ app.use(
 );
 app.use(cookieParser());
 
+app.get("/",(req,res)=>{
+  res.send("done")
+})
+
 // User Routes
 app.use("/api/user", userRoutes);
 
