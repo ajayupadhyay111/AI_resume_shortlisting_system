@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
+import axios, { AxiosError } from "axios";
 
 const ResumeUpload: React.FC = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -61,7 +62,8 @@ const ResumeUpload: React.FC = () => {
       }
       navigate("/dashboard");
     } catch (error) {
-      console.log("error in resume upload ", error);
+      const axiosError = error as AxiosError
+      console.log("error in resume upload ", axiosError);
     }
   };
 
