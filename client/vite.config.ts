@@ -11,4 +11,15 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  base: '/',   // Ensure correct base path
+  build: {
+    outDir: 'dist'
+  },
+  server: {
+    host: true,   // Allow access over LAN
+    port: 5173,   // Default Vite port
+  },
+  preview: {
+    port: 4173,
+  },
 })

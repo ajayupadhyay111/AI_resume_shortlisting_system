@@ -26,6 +26,7 @@ export const register = async (data: RegisterData) => {
 };
 
 export const login = async (data: LoginData) => {
+  
   const response = await api.post("/api/user/login", data);
   return response.data;
 };
