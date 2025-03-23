@@ -1,4 +1,4 @@
-const Attempt = require("../models/attempt");
+
 const User = require("../models/user");
 
 const CheckUserIsEligible = async (req, res, next) => {

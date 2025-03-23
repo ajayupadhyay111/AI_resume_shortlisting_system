@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Logo from "../assets/logo.svg";
 import { Button } from "./ui/button";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -15,7 +15,13 @@ import {
 import { Home, LogOut } from "lucide-react";
 import { useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
 import { logout } from "@/API/authenticationAPIs";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
@@ -49,6 +55,7 @@ function Navbar({}: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const isDashboard = location.pathname.includes("/dashboard");
   const { isAuthenticated, user } = useSelector(
@@ -72,7 +79,7 @@ function Navbar({}: Props) {
           } `}
         >
           <div className="flex justify-between items-center">
-            <img src={Logo} alt="logo" className="w-28 h-16 pl-3" />
+            <img onClick={()=>navigate("/")} src={Logo} alt="logo" className="w-28 h-16 pl-3" />
             <div className="hidden md:flex">
               <ul className="flex gap-5 text-white items-center">
                 {navItems.map((item) => (
@@ -80,9 +87,18 @@ function Navbar({}: Props) {
                     key={item.name}
                     className="relative py-1 cursor-pointer hover:text-yellow-500 group"
                   >
-                    <Link to={item.href}>
-                      <span className="px-1">{item.name}</span>
-                    </Link>
+                    <NavLink
+                      to={item.href}
+                      className={({ isActive }) =>
+                        `px-1 ${
+                          isActive
+                            ? "text-yellow-500"
+                            : "text-white hover:text-yellow-500"
+                        }`
+                      }
+                    >
+                      {item.name}
+                    </NavLink>
                     <div className="absolute mt-1 bottom-0 w-full h-[2px] scale-x-0 group-hover:scale-x-100 group-hover:bg-yellow-500 transition-all duration-300 bg-white"></div>
                   </li>
                 ))}
@@ -169,7 +185,10 @@ function Navbar({}: Props) {
                       </span>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuLabel className="hover:bg-white/10 transition-all duration-300" onClick={() => setOpenDialog(true)}>
+                    <DropdownMenuLabel
+                      className="hover:bg-white/10 transition-all duration-300"
+                      onClick={() => setOpenDialog(true)}
+                    >
                       <span
                         className="text-white flex items-center gap-2"
                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -197,7 +216,7 @@ function Navbar({}: Props) {
                 exit={{ height: 0 }}
                 className="overflow-hidden"
               >
-                <div className="flex flex-col items-center gap-4 mb-4 transition duration-300 ">
+                <div className=" md:hidden flex flex-col items-center gap-4 mb-4 transition duration-300 ">
                   {navItems.map((item) => (
                     <Link
                       to={item.href}
@@ -238,29 +257,35 @@ function Navbar({}: Props) {
   );
 }
 
-const Modal = ({openDialog, setOpenDialog}:{openDialog:boolean, setOpenDialog:React.Dispatch<React.SetStateAction<boolean>>}) => {
-    const [isLoading, setIsLoading] = useState(false)
-    const navigate = useNavigate();
-    const dispatch = useDispatch<AppDispatch>();
-    const handleLogout = async () => {
-        try {
-            setIsLoading(true)
-            const response = await logout()
-            if(response.message){
-                toast.success(response.message)
-                setOpenDialog(false)
-                setIsLoading(false)
-                localStorage.removeItem("accessToken")
-                navigate("/login")
-              dispatch(logoutUser())
-                return; 
-            }
-        } catch (error) {
-            console.log(error)
-        }
-     setOpenDialog(false)
-     setIsLoading(false)
+const Modal = ({
+  openDialog,
+  setOpenDialog,
+}: {
+  openDialog: boolean;
+  setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  const handleLogout = async () => {
+    try {
+      setIsLoading(true);
+      const response = await logout();
+      if (response.message) {
+        toast.success(response.message);
+        setOpenDialog(false);
+        setIsLoading(false);
+        localStorage.removeItem("accessToken");
+        navigate("/login");
+        dispatch(logoutUser());
+        return;
+      }
+    } catch (error) {
+      console.log(error);
     }
+    setOpenDialog(false);
+    setIsLoading(false);
+  };
   return (
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogContent className="bg-gray-900">
@@ -268,17 +293,23 @@ const Modal = ({openDialog, setOpenDialog}:{openDialog:boolean, setOpenDialog:Re
           <DialogTitle>Are you sure you want to logout?</DialogTitle>
         </DialogHeader>
         <DialogDescription className="flex justify-between items-center">
-                <Button variant="outline" onClick={() => setOpenDialog(false)}>Cancel</Button>
-                <Button className="bg-red-600 hover:bg-red-500 text-white w-[72px]" onClick={handleLogout}>
-                {
-                  isLoading?
-                  <div className="border-b-2 border-white w-5 h-5 rounded-full animate-spin"></div>:"Logout"
-                }
-                </Button>
+          <Button variant="outline" onClick={() => setOpenDialog(false)}>
+            Cancel
+          </Button>
+          <Button
+            className="bg-red-600 hover:bg-red-500 text-white w-[72px]"
+            onClick={handleLogout}
+          >
+            {isLoading ? (
+              <div className="border-b-2 border-white w-5 h-5 rounded-full animate-spin"></div>
+            ) : (
+              "Logout"
+            )}
+          </Button>
         </DialogDescription>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
 export default Navbar;

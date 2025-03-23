@@ -1,15 +1,16 @@
 import { uploadResume } from "@/API/resumeAPI";
-import { useNavigate } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ResumeUpload: React.FC = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [description, setDescription] = useState<string>("");
   const [uniqueFiles, setUniqueFiles] = useState<File[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const onDrop = (acceptedFiles: File[]) => {
     setFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
@@ -23,9 +24,12 @@ const ResumeUpload: React.FC = () => {
     multiple: true,
   });
 
-  useEffect(() => {
+  function scrollToTop(){
     window.scrollTo(0, 0);
+  }
 
+  useEffect(() => {
+   scrollToTop();
     const uniqueFiles = files.filter(
       (file, index, self) =>
         index ===
@@ -38,6 +42,9 @@ const ResumeUpload: React.FC = () => {
   }, [files]);
 
   const handleUpload = async () => {
+    scrollToTop();
+    setIsLoading(true);
+
     if (files.length === 0) {
       alert("No files to upload!");
       return;
@@ -60,10 +67,15 @@ const ResumeUpload: React.FC = () => {
       if (response.success) {
         toast.success("Match Completed Successfully!");
       }
-      window.location.href = "/dashboard"
-    } catch (error) {
-      const axiosError = error as AxiosError
-      console.log("error in resume upload ", axiosError);
+      window.location.href = "/dashboard";
+    } catch (error:any) {
+      console.log("error in resume upload ", error);
+      toast.error(
+        error.response?.data?.message || "Failed to upload resume"
+      );
+      navigate("/pricing");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -71,6 +83,17 @@ const ResumeUpload: React.FC = () => {
     const files = Array.from(e.target.files || []);
     setFiles(files);
   };
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+        <div className="flex items-center justify-center space-x-2">
+          <span>Wait</span>
+          <div className="border-b-2 rounded-full h-6 w-6 animate-spin"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex justify-center items-center h-screen mt-20">

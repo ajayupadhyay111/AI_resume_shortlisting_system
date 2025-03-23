@@ -10,9 +10,14 @@ import LinkedInIcon from "../assets/linkedin.svg";
 import { register as registerUser } from "../API/authenticationAPIs";
 import { twMerge } from "tailwind-merge";
 import toast from "react-hot-toast";
+import { AxiosError } from "axios";
 // import { AuthContext } from "@/context/authContext.js";
 // import { googleAuth, login } from "@/api/api";
 // import { useGoogleLogin } from "@react-oauth/google";
+
+interface ErrorResponse {
+  message: string;
+}
 
 const Register = () => {
   const [focusField, setFocusField] = useState<string | null>(null);
@@ -39,13 +44,14 @@ const Register = () => {
       console.log("Response:", response);
       if (response.success) {
         toast.success(response.message);
-        navigate("/login");
-      } else {
-        toast.error(response.message);
+        navigate("/verify-email",{state:{email:data.email}});
       }
     } catch (error) { 
       console.log("Error:", error);
-      toast.error("Something went wrong");
+      const axiosError = error as AxiosError<ErrorResponse>;
+      toast.error( axiosError.response?.data?.message || 
+        axiosError.message || 
+        "Registration failed");
     } finally {
       setIsLoading(false);
     }
