@@ -18,7 +18,6 @@ const Attempt = () => {
     const [filteredData, setFilteredData] = useState<any[]>([]);
     const [input, setInput] = useState("")
     const [sortOrder, setSortOrder] = useState("asc");
-    const [role, setRole] = useState("all");
     const location = useLocation()
     const id = location.pathname.split("/").pop();
 
@@ -42,7 +41,6 @@ const Attempt = () => {
 
     const FilterDataBasedOnInput = () => {
         setFilteredData(data.filter((item) => Object.values(item).some(value => value?.toString().toLowerCase().includes(input))))
-        setRole("all")
     }
 
     const handleSelectChange = (value: string) => {

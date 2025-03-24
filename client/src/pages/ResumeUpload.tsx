@@ -2,7 +2,6 @@ import { uploadResume } from "@/API/resumeAPI";
 import React, { useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
-import { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 
 const ResumeUpload: React.FC = () => {

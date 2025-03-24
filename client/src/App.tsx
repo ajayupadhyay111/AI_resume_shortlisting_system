@@ -25,7 +25,6 @@ const ResumeUpload = lazy(() => import("./pages/ResumeUpload"));
 const VerifyEmail = lazy(() => import("./pages/VerifyEmail"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
-import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 

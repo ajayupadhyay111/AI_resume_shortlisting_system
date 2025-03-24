@@ -7,8 +7,6 @@ import { useForm, SubmitHandler } from "react-hook-form";
 
 // import { AuthContext } from "@/context/authContext.js";
 import GoogleIcon from "../assets/google.svg";
-import FacebookIcon from "../assets/facebook.svg";
-import LinkedInIcon from "../assets/linkedin.svg";
 import { googleAuthLogin, login } from "@/API/authenticationAPIs";
 import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";

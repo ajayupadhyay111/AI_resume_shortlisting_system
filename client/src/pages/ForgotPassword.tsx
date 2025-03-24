@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { forgotPassword } from '../API/authenticationAPIs';
 import toast from 'react-hot-toast';
@@ -7,6 +7,10 @@ const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {   
+    window.scrollTo(0, 0);
+  },[])
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -21,7 +25,6 @@ const ForgotPassword: React.FC = () => {
       const response = await forgotPassword(email);
       if (response.success) {
         toast.success(response.message);
-        navigate('/reset-password', { state: { email } });
       }
     } catch (error: any) {
       toast.error(

@@ -6,10 +6,12 @@ const resumeRoutes = require("./routes/resume.routes");
 const userRoutes = require("./routes/user.routes");
 const errorHandler = require("./utils/errorHandler");
 const cookieParser = require("cookie-parser");
-
+const path = require("path");
 dotenv.config();
 
 const app = express();
+
+const _dirname = path.resolve();
 
 app.use(express.json());
 app.use(
@@ -20,9 +22,6 @@ app.use(
 );
 app.use(cookieParser());
 
-app.get("/",(req,res)=>{
-  res.send("done")
-})
 
 // User Routes
 app.use("/api/user", userRoutes);
@@ -33,6 +32,10 @@ app.use("/api/resume", resumeRoutes);
 // Error Handling Middleware
 app.use(errorHandler);
 
+app.use(express.static(path.join(_dirname, "/client/dist")));
+app.get("*", (req, res) =>
+  res.sendFile(path.resolve(_dirname, "client", "dist", "index.html"))
+);
 // Connect to MongoDB
 connectDB();
 

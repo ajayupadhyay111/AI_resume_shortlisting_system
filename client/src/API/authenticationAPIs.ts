@@ -1,5 +1,3 @@
-import { googleAuth } from '@/api/api';
-import { MdEmail } from "react-icons/md";
 import api from "../utils/axios";
 
 type RegisterData = {
