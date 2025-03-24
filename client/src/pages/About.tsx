@@ -10,7 +10,7 @@ const About = () => {
   const { isAuthenticated } = useSelector((state: RootState) => state.user);
   return (
     <div className="min-h-screen bg-gray-950/10 mt-20 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="absolute top-1/2 left-1/2 transform-1/2 h-0 w-0 boxx animate-pulse"></div>
+      <div className="fixed top-1/2 left-1/2 transform-1/2 h-0 w-0 boxx animate-pulse"></div>
       <div className="max-w-7xl mx-auto">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-gray-100 mb-8">
