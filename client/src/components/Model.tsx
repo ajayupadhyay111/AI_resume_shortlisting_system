@@ -6,13 +6,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "./ui/dialog";
-import { logout } from "@/API/authenticationAPIs";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "@/store/features/user/userSlice";
 import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { logout } from "@/API/authenticationAPIs";
 export const Modal = ({
     openDialog,
     setOpenDialog,

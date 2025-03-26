@@ -423,15 +423,18 @@ const userController = {
 
       const { email, name, picture } = userRes.data;
 
-      let user = new User({
-        name,
-        email,
-        image: picture,
-        password: null,
-        attemptCount: 0,
-      });
-      await user.save();
-
+      var user = await User.findOne({email});
+      if(!user){ 
+        user = new User({
+          name,
+          email,
+          image: picture,
+          password: null,
+          attemptCount: 0,
+        });
+        await user.save();
+        
+      }
       // Generate refresh token
       const refreshToken = jwt.sign(
         { userId: user._id },
