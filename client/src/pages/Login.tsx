@@ -60,6 +60,7 @@ const Login = () => {
   // google login functionality is written below
   const responseGoogle = async (authResult: AuthResult) => {
     try {
+      console.log(authResult.code)
       const response = await googleAuthLogin(authResult.code);
       dispatch(setUser(response.user));
       toast.success(`Welcome ${response.user.name}`);

@@ -43,8 +43,8 @@ const VerifyEmail: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-800">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md border border-gray-300">
+    <div className="min-h-screen flex items-center justify-center bg-gray-900 text-gray-800">
+      <div className="bg-gray-800 p-8 rounded-lg shadow-lg text-white w-full max-w-md border border-gray-500">
         <h2 className="text-3xl font-bold mb-6 text-center">Email Verification</h2>
         <p className="text-center text-gray-600 mb-6">
           Please enter the verification code sent to<br />
@@ -60,7 +60,7 @@ const VerifyEmail: React.FC = () => {
             id="code"
             value={code}
             onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-yellow-500 outline-none"
+            className="w-full px-4 py-2 rounded-lg border border-gray-500 focus:ring-2 focus:ring-yellow-500 outline-none"
             placeholder="Enter 6-digit code"
             maxLength={6}
             required

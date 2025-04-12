@@ -23,12 +23,12 @@ const ResumeUpload: React.FC = () => {
     multiple: true,
   });
 
-  function scrollToTop(){
+  function scrollToTop() {
     window.scrollTo(0, 0);
   }
 
   useEffect(() => {
-   scrollToTop();
+    scrollToTop();
     const uniqueFiles = files.filter(
       (file, index, self) =>
         index ===
@@ -51,13 +51,12 @@ const ResumeUpload: React.FC = () => {
 
     if (description.length === 0) {
       toast.error("Please write the job description!");
+      setIsLoading(false)
       return;
     }
 
     const formData = new FormData();
     uniqueFiles.forEach((file) => formData.append("resumes", file));
-
-    console.log("Uploading files:", uniqueFiles);
 
     // 🔥 Job description bhi append karo
     formData.append("jobDescription", description);
@@ -67,20 +66,13 @@ const ResumeUpload: React.FC = () => {
         toast.success("Match Completed Successfully!");
       }
       window.location.href = "/dashboard";
-    } catch (error:any) {
+    } catch (error: any) {
       console.log("error in resume upload ", error);
-      toast.error(
-        error.response?.data?.message || "Failed to upload resume"
-      );
+      toast.error(error.response?.data?.message || "Failed to upload resume");
       navigate("/pricing");
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleUploadFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    setFiles(files);
   };
 
   if (isLoading) {
@@ -93,6 +85,12 @@ const ResumeUpload: React.FC = () => {
       </div>
     );
   }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = Array.from(e.target.files || []);
+    setFiles(selectedFiles);
+    e.target.value = "";
+  };
 
   return (
     <div className="flex justify-center items-center h-screen mt-20">
@@ -119,17 +117,17 @@ const ResumeUpload: React.FC = () => {
           <div className="mt-4">
             <button
               onClick={() => inputRef.current?.click()}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md"
+              className="px-6 py-3 bg-blue-500 text-white rounded-2xl shadow-md hover:bg-blue-600 active:scale-95 transition-all duration-200 ease-in-out"
             >
-              Select Files
+              Select File
             </button>
             <input
               type="file"
               multiple
               accept=".pdf"
-              ref={inputRef}
               className="hidden"
-              onChange={handleUploadFiles}
+              ref={inputRef}
+              onChange={handleFileChange}
             />
           </div>
         </div>
