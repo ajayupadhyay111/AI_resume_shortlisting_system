@@ -363,6 +363,10 @@ const userController = {
       candidate.status = "Rejected";
       await candidate.save();
 
+      attempt.shortlistResumes = attempt.shortlistResumes - 1;
+      attempt.rejectedResumes = attempt.rejectedResumes + 1;
+      attempt.save();
+
       res.status(200).json({ message: "Candidate rejected successfully" });
     } catch (error) {
       next(error);
@@ -404,6 +408,9 @@ const userController = {
 
       candidate.status = "Shortlisted";
       await candidate.save();
+      attempt.rejectedResumes = attempt.rejectedResumes - 1;
+      attempt.shortlistResumes = attempt.shortlistResumes + 1;
+      attempt.save();
 
       res.status(200).json({ message: "Candidate shortlisted successfully" });
     } catch (error) {

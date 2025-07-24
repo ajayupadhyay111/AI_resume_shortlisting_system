@@ -14,6 +14,7 @@ function SubDashboard({ }: Props) {
   useEffect(() => {
     const fetchAttempts = async () => {
       const attempts = await getAttempts();
+      console.log("attempts: ", attempts);
       setAttempts(attempts);
     }
     fetchAttempts();

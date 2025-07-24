@@ -11,9 +11,6 @@ import { register as registerUser } from "../API/authenticationAPIs";
 import { twMerge } from "tailwind-merge";
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
-// import { AuthContext } from "@/context/authContext.js";
-// import { googleAuth, login } from "@/api/api";
-// import { useGoogleLogin } from "@react-oauth/google";
 
 interface ErrorResponse {
   message: string;
@@ -57,23 +54,6 @@ const Register = () => {
     }
   };
 
-  // google login functionality is written below
-  //   const responseGoogle = async (authResult) => {
-  //     try {
-  //       const response = await googleAuth(authResult.code);
-  //       setUser(response.data.user);
-  //       setAccessToken(response.data.accessToken);
-  //       navigate("/");
-  //     } catch (error) {
-  //       console.log("error while requesting google code ", error);
-  //     }
-  //   };
-
-  //   const googleLogin = useGoogleLogin({
-  //     onSuccess: responseGoogle,
-  //     onError: responseGoogle,
-  //     flow: "auth-code",
-  //   });
   return (
     <div
       className="w-full mt-7 h-screen flex justify-center items-center"

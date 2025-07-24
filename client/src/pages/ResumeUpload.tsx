@@ -1,5 +1,5 @@
 import { uploadResume } from "@/API/resumeAPI";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -8,19 +8,24 @@ const ResumeUpload: React.FC = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [description, setDescription] = useState<string>("");
   const [uniqueFiles, setUniqueFiles] = useState<File[]>([]);
-  const inputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  // Function to handle file drop
+  // This function is called when files are dropped into the dropzone
   const onDrop = (acceptedFiles: File[]) => {
+    console.log("Accepted files:", acceptedFiles);
     setFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
   };
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     onDrop,
     accept: {
       "application/pdf": [".pdf"], // Accept PDFs
     },
     multiple: true,
+    noClick: true, // disables default click
+    noKeyboard: true, // disables default keyboard
   });
 
   function scrollToTop() {
@@ -28,6 +33,7 @@ const ResumeUpload: React.FC = () => {
   }
 
   useEffect(() => {
+    console.log("hello rendering");
     scrollToTop();
     const uniqueFiles = files.filter(
       (file, index, self) =>
@@ -51,12 +57,12 @@ const ResumeUpload: React.FC = () => {
 
     if (description.length === 0) {
       toast.error("Please write the job description!");
-      setIsLoading(false)
+      setIsLoading(false);
       return;
     }
 
     const formData = new FormData();
-    uniqueFiles.forEach((file) => formData.append("resumes", file));
+    files.forEach((file) => formData.append("resumes", file));
 
     // 🔥 Job description bhi append karo
     formData.append("jobDescription", description);
@@ -86,11 +92,11 @@ const ResumeUpload: React.FC = () => {
     );
   }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = Array.from(e.target.files || []);
-    setFiles(selectedFiles);
-    e.target.value = "";
-  };
+  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const selectedFiles = Array.from(e.target.files || []);
+  //   setFiles(selectedFiles);
+  //   e.target.value = "";
+  // };
 
   return (
     <div className="flex justify-center items-center h-screen mt-20">
@@ -101,36 +107,28 @@ const ResumeUpload: React.FC = () => {
             isDragActive ? "border-blue-500 bg-blue-100" : "border-gray-500"
           }`}
         >
-          <div>
-            <input {...getInputProps()} />
-            {isDragActive ? (
-              <p className="text-lg">Drop the files here...</p>
-            ) : (
-              <p className="text-lg">
-                Drag & drop some files here, or click to select files
-              </p>
-            )}
-          </div>
+          <input {...getInputProps()} />
+          {isDragActive ? (
+            <p className="text-lg">Drop the files here...</p>
+          ) : (
+            <p className="text-lg">
+              Drag & drop some files here, or click to select files
+            </p>
+          )}
           <div className="flex justify-center items-center mt-4">
             <span className="text-md">OR</span>
           </div>
           <div className="mt-4">
             <button
-              onClick={() => inputRef.current?.click()}
+              type="button"
+              onClick={open}
               className="px-6 py-3 bg-blue-500 text-white rounded-2xl shadow-md hover:bg-blue-600 active:scale-95 transition-all duration-200 ease-in-out"
             >
               Select File
             </button>
-            <input
-              type="file"
-              multiple
-              accept=".pdf"
-              className="hidden"
-              ref={inputRef}
-              onChange={handleFileChange}
-            />
           </div>
         </div>
+
         {files?.length > 0 && (
           <div className="mt-4 flex justify-start items-start flex-col">
             <span className="text-lg">Total Files : {files?.length}</span>
