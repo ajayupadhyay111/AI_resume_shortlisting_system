@@ -7,7 +7,7 @@ const generateOTP = require("../helper/generateOTP");
 const sendVerificationEmail = require("../services/sendVerificationEmial");
 const sendPasswordResetEmail = require("../services/sendPasswordResetEmail");
 const { auth2Client } = require("../config/google");
-const axios = require("axios")
+const axios = require("axios");
 
 const userController = {
   register: async (req, res, next) => {
@@ -420,20 +420,21 @@ const userController = {
       const userRes = await axios.get(
         `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleRes.tokens.access_token}`
       );
-
+      
       const { email, name, picture } = userRes.data;
 
-      var user = await User.findOne({email});
-      if(!user){ 
+      var user = await User.findOne({ email });
+
+      if (!user) {
         user = new User({
           name,
           email,
           image: picture,
           password: null,
           attemptCount: 0,
+          isVerified: true,
         });
         await user.save();
-        
       }
       // Generate refresh token
       const refreshToken = jwt.sign(
